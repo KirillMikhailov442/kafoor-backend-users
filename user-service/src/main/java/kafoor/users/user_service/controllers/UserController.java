@@ -1,8 +1,8 @@
 package kafoor.users.user_service.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import kafoor.users.user_service.dtos.UserCreateDTO;
-import kafoor.users.user_service.dtos.UserUpdateDTO;
+import kafoor.users.user_service.dtos.*;
 import kafoor.users.user_service.models.User;
 import kafoor.users.user_service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,11 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> register(@Valid @RequestBody UserCreateDTO dto){
-        User user = userService.createUser(dto);
+    public ResponseEntity<UserCreateResDTO> register(@Valid @RequestBody UserCreateReqDTO dto, HttpServletRequest request){
+        HeaderDTO headerDto = HeaderDTO.builder()
+                .IP(request.getRemoteAddr())
+                .userAgent(request.getHeader("User-Agent")).build();
+        UserCreateResDTO user = userService.createUser(dto, headerDto);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 

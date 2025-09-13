@@ -1,16 +1,16 @@
 package kafoor.users.user_service.services;
 
-import kafoor.users.user_service.dtos.UserCreateDTO;
-import kafoor.users.user_service.dtos.UserUpdateDTO;
+import kafoor.users.user_service.dtos.*;
 import kafoor.users.user_service.exceptions.Conflict;
 import kafoor.users.user_service.exceptions.NotFound;
 import kafoor.users.user_service.models.Role;
 import kafoor.users.user_service.models.User;
+import kafoor.users.user_service.models.enums.Tokens;
 import kafoor.users.user_service.models.enums.UserRoles;
 import kafoor.users.user_service.repositories.UserRepo;
+import kafoor.users.user_service.utils.jwt.JWTUtils;
 import kafoor.users.user_service.utils.jwt.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,6 +26,10 @@ public class UserService implements UserDetailsService {
     private UserRepo userRepo;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private JWTUtils jwtUtils;
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public List<User> getAllUsers(){
@@ -53,20 +57,34 @@ public class UserService implements UserDetailsService {
     }
 
     @Transient
-    public User createUser(UserCreateDTO dto){
-        if(userRepo.existsByEmail(dto.getEmail())) throw new Conflict(("A user with such email already exists"));
-        if(userRepo.existsByNickname(dto.getNickname())) throw new Conflict(("A user with such nickname already exists"));
+    public UserCreateResDTO createUser(UserCreateReqDTO userDto, HeaderDTO headerDto){
+        if(userRepo.existsByEmail(userDto.getEmail())) throw new Conflict(("A user with such email already exists"));
+        if(userRepo.existsByNickname(userDto.getNickname())) throw new Conflict(("A user with such nickname already exists"));
 
         Set<Role> roles = Set.of(roleService.findOrCreateRole(UserRoles.USER));
+        System.out.println("Роль сделана/добавлена");
         User newUser = User.builder()
-                .name(dto.getName())
-                .email(dto.getEmail())
-                .nickname(dto.getNickname())
+                .name(userDto.getName())
+                .email(userDto.getEmail())
+                .nickname(userDto.getNickname())
                 .isConfirmed(false)
                 .roles(roles)
-                .password(encoder.encode(dto.getPassword())).build();
+                .password(encoder.encode(userDto.getPassword())).build();
+        User createdUser = userRepo.save(newUser);
 
-        return userRepo.save(newUser);
+        UserPrincipal userPrincipal = loadUserByUsername(String.valueOf(newUser.getId()));
+        String tokenAccess = jwtUtils.generateToken(userPrincipal, Tokens.ACCESS_TOKEN);
+        String tokenRefresh = jwtUtils.generateToken(userPrincipal, Tokens.REFRESH_TOKEN);
+        TokenCreateDTO tokenCreateDTO = TokenCreateDTO.builder()
+                .IP(headerDto.getIP())
+                .userAgent(headerDto.getUserAgent())
+                .refresh(tokenRefresh).build();
+        tokenService.createToken(tokenCreateDTO, newUser);
+
+        return UserCreateResDTO.builder()
+                .user(createdUser)
+                .access_token(tokenAccess)
+                .refresh_token(tokenRefresh).build();
     }
 
     public User updateUser(UserUpdateDTO dto, long id){

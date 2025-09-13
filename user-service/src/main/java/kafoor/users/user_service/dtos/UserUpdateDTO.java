@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import kafoor.users.user_service.constants.EmailConstants;
 import kafoor.users.user_service.constants.NicknameConstants;
 import kafoor.users.user_service.constants.Regexps;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ public class UserUpdateDTO {
 
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Incorrect email")
+    @Size(min = EmailConstants.MIN_LENGTH_EMAIL, max = EmailConstants.MAX_LENGTH_EMAIL, message = "Email length should be" + EmailConstants.MIN_LENGTH_EMAIL + "to" + EmailConstants.MAX_LENGTH_EMAIL + "characters")
     private String email;
 
     @NotBlank(message = "Nickname is mandatory")
