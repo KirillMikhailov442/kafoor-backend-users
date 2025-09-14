@@ -49,12 +49,12 @@ public class User {
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private long createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private long updatedAt;
 
     @Column(name = "deactivated_at")
-    private LocalDateTime deactivatedAt;
+    private long deactivatedAt;
 }

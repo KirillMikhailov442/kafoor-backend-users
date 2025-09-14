@@ -36,9 +36,9 @@ public class Token {
 
     @CreationTimestamp
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private long createdAt;
 
     @UpdateTimestamp
     @Column(name = "last_login_at")
-    private LocalDateTime lastLogin;
+    private long lastLogin;
 }
