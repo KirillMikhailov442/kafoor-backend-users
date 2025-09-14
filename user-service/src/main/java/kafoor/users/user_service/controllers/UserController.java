@@ -1,5 +1,6 @@
 package kafoor.users.user_service.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import kafoor.users.user_service.dtos.*;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "User", description = "Official user API")
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {
