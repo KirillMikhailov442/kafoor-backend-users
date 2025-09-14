@@ -23,7 +23,7 @@ public class TokenService {
                 .orElseThrow(() -> new NotFound("Token not found with such id"));
     }
 
-    public Token findTokenByRefreshToken(String refreshToken){
+    public Token findTokenByRefresh(String refreshToken){
         return tokenRepo.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new NotFound("Token not found with such refresh token"));
     }

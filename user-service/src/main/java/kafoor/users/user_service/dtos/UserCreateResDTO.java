@@ -8,6 +8,6 @@ import lombok.Getter;
 @Builder
 public class UserCreateResDTO {
     private User user;
-    private String access_token;
-    private String refresh_token;
+    private String accessToken;
+    private String refreshToken;
 }

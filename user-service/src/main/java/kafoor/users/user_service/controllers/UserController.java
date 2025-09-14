@@ -39,10 +39,21 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginDTO dto){
+        TokensDTO tokens = userService.login(dto);
+        return new ResponseEntity<>(tokens, HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<User> update(@Valid @RequestBody UserUpdateDTO dto, @PathVariable long id){
         User user = userService.updateUser(dto, id);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PatchMapping("/update-tokens")
+    public ResponseEntity<TokensDTO> updateRefreshToken(@Valid @RequestBody  TokenCreateDTO dto){
+        return new ResponseEntity<>(userService.updateRefreshTokenOfUser(dto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

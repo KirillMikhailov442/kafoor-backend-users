@@ -3,7 +3,9 @@ package kafoor.users.user_service.dtos;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import kafoor.users.user_service.constants.PasswordConstants;
+import lombok.Getter;
 
+@Getter
 public class PasswordChangeDTO {
     @NotBlank(message = "Current password is mandatory")
     @Size(min = PasswordConstants.MIN_LENGTH_PASSWORD, max = PasswordConstants.MAX_LENGTH_PASSWORD, message = "Password length should be " + PasswordConstants.MIN_LENGTH_PASSWORD + " to " + PasswordConstants.MAX_LENGTH_PASSWORD + " characters")

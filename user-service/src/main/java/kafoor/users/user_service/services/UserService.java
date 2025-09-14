@@ -1,9 +1,11 @@
 package kafoor.users.user_service.services;
 
 import kafoor.users.user_service.dtos.*;
+import kafoor.users.user_service.exceptions.BadRequest;
 import kafoor.users.user_service.exceptions.Conflict;
 import kafoor.users.user_service.exceptions.NotFound;
 import kafoor.users.user_service.models.Role;
+import kafoor.users.user_service.models.Token;
 import kafoor.users.user_service.models.User;
 import kafoor.users.user_service.models.enums.Tokens;
 import kafoor.users.user_service.models.enums.UserRoles;
@@ -17,7 +19,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.beans.Transient;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -62,7 +66,6 @@ public class UserService implements UserDetailsService {
         if(userRepo.existsByNickname(userDto.getNickname())) throw new Conflict(("A user with such nickname already exists"));
 
         Set<Role> roles = Set.of(roleService.findOrCreateRole(UserRoles.USER));
-        System.out.println("Роль сделана/добавлена");
         User newUser = User.builder()
                 .name(userDto.getName())
                 .email(userDto.getEmail())
@@ -83,8 +86,8 @@ public class UserService implements UserDetailsService {
 
         return UserCreateResDTO.builder()
                 .user(createdUser)
-                .access_token(tokenAccess)
-                .refresh_token(tokenRefresh).build();
+                .accessToken(tokenAccess)
+                .refreshToken(tokenRefresh).build();
     }
 
     public User updateUser(UserUpdateDTO dto, long id){
@@ -104,6 +107,48 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(long id){
         userRepo.deleteById(id);
+    }
+
+    public void passwordChangeOfUser(PasswordChangeDTO dto, long id){
+        User user = findUserById(id);
+        if(!encoder.matches(dto.getCurrentPassword(), user.getPassword())) throw new Conflict("Current password does not match user password");
+        user.setPassword(encoder.encode(dto.getNewPassword()));
+        userRepo.save(user);
+    }
+
+    public TokensDTO login(LoginDTO dto){
+        User user = findUserByEmail(dto.getEmail());
+        if(!encoder.matches(dto.getPassword(), user.getPassword())) throw new BadRequest("Incorrect password");
+        UserPrincipal userPrincipal = new UserPrincipal(user);
+        long tokenId = tokenService.findTokenByUserId(user.getId()).getId();
+
+        Map<String, Object> userClaims = new HashMap<>();
+        userClaims.put("roles", userPrincipal.getAuthorities());
+
+        String accessToken = jwtUtils.generateToken(userPrincipal, userClaims, Tokens.ACCESS_TOKEN);
+        String refreshToken = jwtUtils.generateToken(userPrincipal, userClaims, Tokens.REFRESH_TOKEN);
+        tokenService.updateRefreshToken(refreshToken, tokenId);
+        return TokensDTO.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken).build();
+    }
+
+    public TokensDTO updateRefreshTokenOfUser(TokenCreateDTO dto){
+        String currentRefresh = dto.getRefresh();
+        if(!jwtUtils.isTokenExpired(currentRefresh, Tokens.REFRESH_TOKEN)){
+            throw new BadRequest("Token expired");
+        }
+        Token token = tokenService.findTokenByRefresh(currentRefresh);
+        UserPrincipal userPrincipal = new UserPrincipal(findUserById(token.getUser().getId()));
+
+        Map<String, Object> userClaims = new HashMap<>();
+        userClaims.put("roles", userPrincipal.getAuthorities());
+
+        String accessToken = jwtUtils.generateToken(userPrincipal, userClaims, Tokens.ACCESS_TOKEN);
+        String refreshToken = jwtUtils.generateToken(userPrincipal, Tokens.REFRESH_TOKEN);
+        tokenService.updateRefreshToken(currentRefresh, token.getId());
+
+        return TokensDTO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
     @Override
