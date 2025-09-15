@@ -4,10 +4,12 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import kafoor.users.user_service.dtos.*;
 import kafoor.users.user_service.models.User;
 import kafoor.users.user_service.models.enums.UserRoles;
 import kafoor.users.user_service.services.UserService;
+import kafoor.users.user_service.utils.GeneratorKeys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private GeneratorKeys generatorKeys;
 
     @SecurityRequirement(name = "JWT")
     @GetMapping
@@ -54,7 +58,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDTO dto){
+    public ResponseEntity<TokensDTO> login(@RequestBody LoginDTO dto){
         TokensDTO tokens = userService.login(dto);
         return ResponseEntity.ok(tokens);
     }
@@ -73,10 +77,10 @@ public class UserController {
     }
 
     @SecurityRequirement(name = "JWT")
-    @PutMapping("/assign-role")
-    public ResponseEntity<String> assignRole(@Valid @RequestBody RoleDTO dto){
+    @PatchMapping("/assign-role/{role}")
+    public ResponseEntity<String> assignRole(@PathVariable UserRoles role){
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        userService.addRole(dto.getRole(), userId);
+        userService.addRole(role, userId);
         return ResponseEntity.ok("The role is successfully assigned");
     }
 
@@ -86,6 +90,26 @@ public class UserController {
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
         userService.removeRole(role, userId);
         return ResponseEntity.ok("The role is successfully taken away");
+    }
+
+    @SecurityRequirement(name = "JWT")
+    @PatchMapping("/password-change")
+    public ResponseEntity<String> passwordChange(@Valid @RequestBody PasswordChangeDTO dto){
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        userService.passwordChangeOfUser(dto, userId);
+        return ResponseEntity.ok("The password is successfully changed");
+    }
+
+    @PatchMapping("/confirm/{code}")
+    public ResponseEntity<String> confirmUser(@Valid @PathVariable @NotNull(message = "Code must not be null") String code){
+        try{
+            long userId = Long.parseLong(generatorKeys.decode(code));
+            String firstName = userService.findUserById(userId).getName();
+            userService.confirmUser(userId);
+            return ResponseEntity.ok(String.format("User %s has been successfully verified",firstName));
+        }catch (Exception ex){
+            return new ResponseEntity<>("Failed to verify user", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @SecurityRequirement(name = "JWT")

@@ -166,7 +166,7 @@ public class UserService implements UserDetailsService {
     public void removeRole(UserRoles currentRole, long id){
         User user = findUserById(id);
         boolean hasRole = user.getRoles().stream()
-                .anyMatch(role -> role.equals(currentRole));
+                .anyMatch(role -> role.getName().equals(currentRole));
         if(!hasRole) throw new Conflict(String.format("The role of the %s is not of this role", currentRole.toString()));
         Role removeRole = roleService.findRoleByName(currentRole);
         user.getRoles().remove(removeRole);

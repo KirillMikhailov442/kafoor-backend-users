@@ -30,7 +30,6 @@ public class SwaggerConfig {
                         .contact(new Contact()
                                 .name("Mikhailov Kirill")
                                 .email("akcjdjs123456789@gmail.com")));
-
     }
 
     @Bean
