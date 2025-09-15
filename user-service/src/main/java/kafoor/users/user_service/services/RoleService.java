@@ -8,12 +8,18 @@ import kafoor.users.user_service.repositories.RoleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class RoleService {
     @Autowired
     private RoleRepo roleRepo;
+
+    public List<Role> getAllRoles(){
+        return  roleRepo.findAll();
+    }
 
     public Role findRoleById(long id){
         return roleRepo.findById(id).orElseThrow(() -> new NotFound("Role not found by id"));

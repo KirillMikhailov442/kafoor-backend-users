@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @SecurityScheme(
         name = "JWT",
         type = SecuritySchemeType.HTTP,
-        scheme = "Bearer",
+        scheme = "bearer",
         bearerFormat = "JWT"
 )
 public class SwaggerConfig {
@@ -34,18 +34,26 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi adminApi(){
-        return GroupedOpenApi.builder()
-                .group("Admin")
-                .pathsToMatch("/api/v1/admin/**")
-                .build();
-    }
-
-    @Bean
     public GroupedOpenApi userApi(){
         return GroupedOpenApi.builder()
                 .group("User")
                 .pathsToMatch("/api/v1/users/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi roleApi(){
+        return GroupedOpenApi.builder()
+                .group("Role")
+                .pathsToMatch("/api/v1/roles/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi adminApi(){
+        return GroupedOpenApi.builder()
+                .group("Admin")
+                .pathsToMatch("/api/v1/admin/**")
                 .build();
     }
 

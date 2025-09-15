@@ -34,19 +34,19 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         String accessToken = null;
         String username = null;
 
-//        if(authHeader != null && authHeader.startsWith("Bearer ")){
-//            accessToken = authHeader.substring(7);
-//            username = jwtUtils.getUsernameFromToken(accessToken, Tokens.ACCESS_TOKEN);
-//        }
-//
-//        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-//            UserPrincipal userPrincipal = userService.loadUserByUsername(username);
-//            if(!jwtUtils.validateToken(accessToken, Tokens.ACCESS_TOKEN, userPrincipal)){
-//                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
-//                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-//            }
-//        }
+        if(authHeader != null && authHeader.startsWith("Bearer ")){
+            accessToken = authHeader.substring(7);
+            username = jwtUtils.getUsernameFromToken(accessToken, Tokens.ACCESS_TOKEN);
+        }
+
+        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            UserPrincipal userPrincipal = userService.loadUserByUsername(username);
+            if(!jwtUtils.validateToken(accessToken, Tokens.ACCESS_TOKEN, userPrincipal)){
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+        }
         filterChain.doFilter(request, response);
     }
 }

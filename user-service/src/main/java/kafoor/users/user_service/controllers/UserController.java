@@ -1,14 +1,17 @@
 package kafoor.users.user_service.controllers;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import kafoor.users.user_service.dtos.*;
 import kafoor.users.user_service.models.User;
+import kafoor.users.user_service.models.enums.UserRoles;
 import kafoor.users.user_service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,16 +23,25 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @SecurityRequirement(name = "JWT")
     @GetMapping
     public ResponseEntity<List<User>> getAll(){
-        List<User> users = userService.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    @SecurityRequirement(name = "JWT")
     @GetMapping("/{id}")
     public ResponseEntity<User> getOne(@PathVariable long id){
         User user = userService.findUserById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return ResponseEntity.ok(user);
+    }
+
+    @SecurityRequirement(name = "JWT")
+    @GetMapping("/profile")
+    public ResponseEntity<User> profile(){
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.findUserById(userId);
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping
@@ -44,13 +56,15 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO dto){
         TokensDTO tokens = userService.login(dto);
-        return new ResponseEntity<>(tokens, HttpStatus.OK);
+        return ResponseEntity.ok(tokens);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> update(@Valid @RequestBody UserUpdateDTO dto, @PathVariable long id){
-        User user = userService.updateUser(dto, id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    @SecurityRequirement(name = "JWT")
+    @PutMapping()
+    public ResponseEntity<User> update(@Valid @RequestBody UserUpdateDTO dto){
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.updateUser(dto, userId);
+        return ResponseEntity.ok(user);
     }
 
     @PatchMapping("/update-tokens")
@@ -58,9 +72,26 @@ public class UserController {
         return new ResponseEntity<>(userService.updateRefreshTokenOfUser(dto), HttpStatus.CREATED);
     }
 
+    @SecurityRequirement(name = "JWT")
+    @PutMapping("/assign-role")
+    public ResponseEntity<String> assignRole(@Valid @RequestBody RoleDTO dto){
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        userService.addRole(dto.getRole(), userId);
+        return ResponseEntity.ok("The role is successfully assigned");
+    }
+
+    @SecurityRequirement(name = "JWT")
+    @DeleteMapping("/take-role/{role}")
+    public ResponseEntity<String> takeRole(@PathVariable UserRoles role){
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        userService.removeRole(role, userId);
+        return ResponseEntity.ok("The role is successfully taken away");
+    }
+
+    @SecurityRequirement(name = "JWT")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable long id){
         userService.deleteUser(id);
-        return new ResponseEntity<>("User successfully deleted", HttpStatus.OK);
+        return ResponseEntity.ok("User successfully deleted");
     }
 }

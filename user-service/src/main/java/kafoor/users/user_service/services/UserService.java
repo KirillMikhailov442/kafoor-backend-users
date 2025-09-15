@@ -151,6 +151,28 @@ public class UserService implements UserDetailsService {
         return TokensDTO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
+    public void addRole(UserRoles newRole, long id){
+        User user = findUserById(id);
+        boolean hasRole = user.getRoles().stream()
+                .anyMatch(role -> role.equals(newRole));
+        if(hasRole) throw new Conflict(String.format("The role of %s has already been issued to this user", newRole.toString()));
+        Set<Role> roles = user.getRoles();
+        Role newRoleEntity = roleService.findOrCreateRole(newRole);
+        roles.add(newRoleEntity);
+        user.setRoles(roles);
+        userRepo.save(user);
+    }
+
+    public void removeRole(UserRoles currentRole, long id){
+        User user = findUserById(id);
+        boolean hasRole = user.getRoles().stream()
+                .anyMatch(role -> role.equals(currentRole));
+        if(!hasRole) throw new Conflict(String.format("The role of the %s is not of this role", currentRole.toString()));
+        Role removeRole = roleService.findRoleByName(currentRole);
+        user.getRoles().remove(removeRole);
+        userRepo.save(user);
+    }
+
     @Override
     public UserPrincipal loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepo.findById(Long.valueOf(username))
