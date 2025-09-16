@@ -11,6 +11,8 @@ import io.swagger.v3.oas.models.info.Info;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 
 @Configuration
 @SecurityScheme(
@@ -41,14 +43,6 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi roleApi(){
-        return GroupedOpenApi.builder()
-                .group("Role")
-                .pathsToMatch("/api/v1/roles/**")
-                .build();
-    }
-
-    @Bean
     public GroupedOpenApi adminApi(){
         return GroupedOpenApi.builder()
                 .group("Admin")
@@ -56,4 +50,11 @@ public class SwaggerConfig {
                 .build();
     }
 
+    @Bean
+    public GroupedOpenApi roleApi(){
+        return GroupedOpenApi.builder()
+                .group("Role")
+                .pathsToMatch("/api/v1/roles/**")
+                .build();
+    }
 }

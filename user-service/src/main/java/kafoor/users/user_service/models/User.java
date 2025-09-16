@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +32,7 @@ public class User {
     @Column(name = "email", length = 64, unique = true, nullable = false)
     private String email;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -56,5 +56,5 @@ public class User {
     private long updatedAt;
 
     @Column(name = "deactivated_at")
-    private long deactivatedAt;
+    private Long deactivatedAt;
 }

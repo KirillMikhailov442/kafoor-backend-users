@@ -77,22 +77,6 @@ public class UserController {
     }
 
     @SecurityRequirement(name = "JWT")
-    @PatchMapping("/assign-role/{role}")
-    public ResponseEntity<String> assignRole(@PathVariable UserRoles role){
-        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        userService.addRole(role, userId);
-        return ResponseEntity.ok("The role is successfully assigned");
-    }
-
-    @SecurityRequirement(name = "JWT")
-    @DeleteMapping("/take-role/{role}")
-    public ResponseEntity<String> takeRole(@PathVariable UserRoles role){
-        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        userService.removeRole(role, userId);
-        return ResponseEntity.ok("The role is successfully taken away");
-    }
-
-    @SecurityRequirement(name = "JWT")
     @PatchMapping("/password-change")
     public ResponseEntity<String> passwordChange(@Valid @RequestBody PasswordChangeDTO dto){
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());

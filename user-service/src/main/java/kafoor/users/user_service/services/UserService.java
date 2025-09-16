@@ -19,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.beans.Transient;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +118,7 @@ public class UserService implements UserDetailsService {
         userRepo.save(user);
     }
 
+    @Transient
     public TokensDTO login(LoginDTO dto){
         User user = findUserByEmail(dto.getEmail());
         if(!encoder.matches(dto.getPassword(), user.getPassword())) throw new BadRequest("Incorrect password");
@@ -170,6 +173,18 @@ public class UserService implements UserDetailsService {
         if(!hasRole) throw new Conflict(String.format("The role of the %s is not of this role", currentRole.toString()));
         Role removeRole = roleService.findRoleByName(currentRole);
         user.getRoles().remove(removeRole);
+        userRepo.save(user);
+    }
+
+    public void banUser(long id){
+        User user = findUserById(id);
+        user.setDeactivatedAt(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        userRepo.save(user);
+    }
+
+    public void unbanUser(long id){
+        User user = findUserById(id);
+        user.setDeactivatedAt(null);
         userRepo.save(user);
     }
 

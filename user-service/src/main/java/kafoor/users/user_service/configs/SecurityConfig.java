@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers(PERMIT_ALL).permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .requestMatchers("api/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/graphiql/**", "/graphql/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "api/v1/users").permitAll()
                         .anyRequest().authenticated()
                 )

@@ -1,0 +1,21 @@
+type User {
+    id: ID!
+    name: String!
+    nickname: String!
+    email: String!
+    isConfirmed: Boolean
+    roles: [Role!]!
+    createdAt: Int!
+    updatedAt: Int!
+    deactivatedAt: Int
+}
+
+type Role {
+    id: ID!
+    name: String!
+}
+
+type Query {
+    getAllUsers: [User!]!
+    getUserById(id: ID): User
+}
