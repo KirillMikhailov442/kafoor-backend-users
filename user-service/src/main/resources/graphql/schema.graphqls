@@ -5,6 +5,7 @@ type User {
     email: String!
     isConfirmed: Boolean
     roles: [Role!]!
+    tokens: [Token!]!
     createdAt: Int!
     updatedAt: Int!
     deactivatedAt: Int
@@ -15,7 +16,22 @@ type Role {
     name: String!
 }
 
+type Token {
+    id: ID!
+    user: User
+    refresh: String!
+    userAgent: String!
+    ip: String!
+    createdAt: Int!
+    lastLoginAt: Int!
+}
+
 type Query {
     getAllUsers: [User!]!
     getUserById(id: ID): User
+
+    getAllRoles: [Role!]!
+    getRoleById(id: ID): Role
+
+    getTokenById(id: ID): Token
 }
