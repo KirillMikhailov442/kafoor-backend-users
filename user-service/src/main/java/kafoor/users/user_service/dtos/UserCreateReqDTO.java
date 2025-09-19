@@ -6,9 +6,12 @@ import kafoor.users.user_service.constants.NicknameConstants;
 import kafoor.users.user_service.constants.PasswordConstants;
 import kafoor.users.user_service.constants.Regexps;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserCreateReqDTO {
     @NotBlank(message = "Name is mandatory")

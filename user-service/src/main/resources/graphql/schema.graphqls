@@ -1,3 +1,9 @@
+enum UserRole {
+    User
+    ADMIN
+}
+
+
 type User {
     id: ID!
     name: String!
@@ -9,6 +15,11 @@ type User {
     createdAt: Int!
     updatedAt: Int!
     deactivatedAt: Int
+}
+
+type Tokens {
+    accessToken: String!
+    refreshToken: String!
 }
 
 type Role {
@@ -26,12 +37,50 @@ type Token {
     lastLoginAt: Int!
 }
 
+input CreateUserInput {
+    name: String!
+    email: String!
+    nickname: String!
+    password: String!
+}
+
+input LoginDTO {
+    email: String!
+    password: String!
+}
+
+input UpdateUserInput {
+    name: String!
+    email: String!
+    nickname: String!
+}
+
+input PasswordChangeInput {
+    currentPassword: String!
+    newPassword: String!
+}
+
 type Query {
     getAllUsers: [User!]!
     getUserById(id: ID): User
+    getProfile: User
 
     getAllRoles: [Role!]!
     getRoleById(id: ID): Role
 
     getTokenById(id: ID): Token
+}
+
+type Mutation {
+    createUser(input: CreateUserInput!): User
+    login(input: LoginDTO!): Tokens!
+    updateUser(input: UpdateUserInput): User
+    deleteUser(id: ID!): String
+    updateTokens(refresh: String!): Tokens
+    passwordChange(input: PasswordChangeInput): String
+
+    assignRole(role: UserRole!): String
+    takeRole(role: UserRole!): String
+    banUser(id: ID!): String
+    unBanUser(id: ID!): String
 }

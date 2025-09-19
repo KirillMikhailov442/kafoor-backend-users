@@ -1,10 +1,11 @@
 package kafoor.users.user_service.dtos;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Builder
-@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TokensDTO {
     private String accessToken;
     private String refreshToken;

@@ -8,10 +8,13 @@ import kafoor.users.user_service.constants.EmailConstants;
 import kafoor.users.user_service.constants.NicknameConstants;
 import kafoor.users.user_service.constants.Regexps;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserUpdateDTO {
     @NotBlank(message = "Name is mandatory")
     @Size(min = 2, max = 32, message = "Name length should be 2 to 32 characters")

@@ -5,9 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import kafoor.users.user_service.constants.EmailConstants;
 import kafoor.users.user_service.constants.PasswordConstants;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor
 public class LoginDTO {
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Incorrect email")

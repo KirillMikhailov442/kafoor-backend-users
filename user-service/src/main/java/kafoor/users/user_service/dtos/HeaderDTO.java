@@ -1,12 +1,11 @@
 package kafoor.users.user_service.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class HeaderDTO {
     private String IP;
     private String userAgent;
