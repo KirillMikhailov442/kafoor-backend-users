@@ -33,28 +33,4 @@ public class SwaggerConfig {
                                 .name("Mikhailov Kirill")
                                 .email("akcjdjs123456789@gmail.com")));
     }
-
-    @Bean
-    public GroupedOpenApi userApi(){
-        return GroupedOpenApi.builder()
-                .group("User")
-                .pathsToMatch("/api/v1/users/**")
-                .build();
-    }
-
-    @Bean
-    public GroupedOpenApi adminApi(){
-        return GroupedOpenApi.builder()
-                .group("Admin")
-                .pathsToMatch("/api/v1/admin/**")
-                .build();
-    }
-
-    @Bean
-    public GroupedOpenApi roleApi(){
-        return GroupedOpenApi.builder()
-                .group("Role")
-                .pathsToMatch("/api/v1/roles/**")
-                .build();
-    }
 }
