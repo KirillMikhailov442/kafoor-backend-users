@@ -9,12 +9,8 @@ import kafoor.users.user_service.services.UserService;
 import kafoor.users.user_service.utils.jwt.JWTUtils;
 import kafoor.users.user_service.utils.jwt.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.token.TokenService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -34,7 +30,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         String accessToken = null;
         String username = null;
 
-        if(authHeader != null && authHeader.startsWith("Bearer ")){
+        if(authHeader != null
+                && !authHeader.substring(7).trim().equals("null")
+                && authHeader.substring(7).trim() != null
+                && authHeader.startsWith("Bearer ")){
             accessToken = authHeader.substring(7);
             username = jwtUtils.getUsernameFromToken(accessToken, Tokens.ACCESS_TOKEN);
         }
