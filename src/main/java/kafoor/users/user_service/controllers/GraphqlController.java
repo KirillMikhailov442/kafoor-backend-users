@@ -69,10 +69,10 @@ public class GraphqlController {
         return userService.createUser(input, headerDto);
     }
 
-    @MutationMapping
-    public TokensDTO login(@Argument LoginDTO input){
-        return userService.login(input);
-    }
+//    @MutationMapping
+//    public TokensDTO login(@Argument LoginDTO input){
+//        return userService.login(input);
+//    }
 
     @PreAuthorize("isAuthenticated()")
     @MutationMapping

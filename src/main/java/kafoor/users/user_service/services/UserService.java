@@ -9,6 +9,7 @@ import kafoor.users.user_service.models.Token;
 import kafoor.users.user_service.models.User;
 import kafoor.users.user_service.models.enums.Tokens;
 import kafoor.users.user_service.models.enums.UserRoles;
+import kafoor.users.user_service.repositories.TokenRepo;
 import kafoor.users.user_service.repositories.UserRepo;
 import kafoor.users.user_service.utils.jwt.JWTUtils;
 import kafoor.users.user_service.utils.jwt.UserPrincipal;
@@ -119,18 +120,29 @@ public class UserService implements UserDetailsService {
     }
 
     @Transient
-    public TokensDTO login(LoginDTO dto){
+    public TokensDTO login(LoginDTO dto, HeaderDTO headerDTO){
         User user = findUserByEmail(dto.getEmail());
+        System.out.println("LOGIN");
         if(!encoder.matches(dto.getPassword(), user.getPassword())) throw new BadRequest("Incorrect password");
         UserPrincipal userPrincipal = new UserPrincipal(user);
-        long tokenId = tokenService.findTokenByUserId(user.getId()).getId();
+        Token token = null;
+       try{
+           token = tokenService.findTokenByUserAndUserAgentAndIP(user, headerDTO.getUserAgent(), headerDTO.getIP());
+       }catch (NotFound notFound){
+           String tokenRefresh = jwtUtils.generateToken(userPrincipal, Tokens.REFRESH_TOKEN);
+           TokenCreateDTO tokenCreateDTO = TokenCreateDTO.builder()
+                   .IP(headerDTO.getIP())
+                   .userAgent(headerDTO.getUserAgent())
+                   .refresh(tokenRefresh).build();
+           token = tokenService.createToken(tokenCreateDTO, user);
+       }
 
         Map<String, Object> userClaims = new HashMap<>();
         userClaims.put("roles", userPrincipal.getAuthorities());
 
         String accessToken = jwtUtils.generateToken(userPrincipal, userClaims, Tokens.ACCESS_TOKEN);
         String refreshToken = jwtUtils.generateToken(userPrincipal, userClaims, Tokens.REFRESH_TOKEN);
-        tokenService.updateRefreshToken(refreshToken, tokenId);
+        tokenService.updateRefreshToken(refreshToken, token.getId());
         return TokensDTO.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken).build();

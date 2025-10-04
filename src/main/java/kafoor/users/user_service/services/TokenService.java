@@ -23,6 +23,16 @@ public class TokenService {
                 .orElseThrow(() -> new NotFound("Token not found with such id"));
     }
 
+    public Token findTokenByUserIdAndUserAgentAndIP(long userId, String userAgent, String ip){
+        return tokenRepo.findByUserIdAndUserAgentAndIp(userId, userAgent, ip)
+                .orElseThrow(() -> new NotFound("Token not found"));
+    }
+
+    public Token findTokenByUserAndUserAgentAndIP(User user, String userAgent, String ip){
+        return tokenRepo.findByUserAndUserAgentAndIp(user, userAgent, ip)
+                .orElseThrow(() -> new NotFound("Toke not found"));
+    }
+
     public Token findTokenByRefresh(String refreshToken){
         return tokenRepo.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new NotFound("Token not found with such refresh token"));

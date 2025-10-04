@@ -58,8 +58,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokensDTO> login(@RequestBody LoginDTO dto){
-        TokensDTO tokens = userService.login(dto);
+    public ResponseEntity<TokensDTO> login(@RequestBody LoginDTO dto, HttpServletRequest request){
+        HeaderDTO headerDto = HeaderDTO.builder()
+                .IP(request.getRemoteAddr())
+                .userAgent(request.getHeader("User-Agent")).build();
+        TokensDTO tokens = userService.login(dto, headerDto);
         return ResponseEntity.ok(tokens);
     }
 
