@@ -122,7 +122,6 @@ public class UserService implements UserDetailsService {
     @Transient
     public TokensDTO login(LoginDTO dto, HeaderDTO headerDTO){
         User user = findUserByEmail(dto.getEmail());
-        System.out.println("LOGIN");
         if(!encoder.matches(dto.getPassword(), user.getPassword())) throw new BadRequest("Incorrect password");
         UserPrincipal userPrincipal = new UserPrincipal(user);
         Token token = null;
