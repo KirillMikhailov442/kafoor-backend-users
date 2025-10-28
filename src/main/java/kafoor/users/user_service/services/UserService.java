@@ -7,6 +7,7 @@ import kafoor.users.user_service.exceptions.NotFound;
 import kafoor.users.user_service.models.Role;
 import kafoor.users.user_service.models.Token;
 import kafoor.users.user_service.models.User;
+import kafoor.users.user_service.models.enums.RegisterRole;
 import kafoor.users.user_service.models.enums.Tokens;
 import kafoor.users.user_service.models.enums.UserRoles;
 import kafoor.users.user_service.repositories.UserRepo;
@@ -70,7 +71,17 @@ public class UserService implements UserDetailsService {
         if (userRepo.existsByNickname(userDto.getNickname()))
             throw new Conflict(("A user with such nickname already exists"));
 
-        Set<Role> roles = Set.of(roleService.findOrCreateRole(UserRoles.USER));
+        Set<Role> roles = null;
+        if (userDto.getRole() == RegisterRole.TEACHER) {
+            roles = Set.of(
+                    roleService.findOrCreateRole(UserRoles.USER),
+                    roleService.findOrCreateRole(UserRoles.TEACHER));
+        } else {
+            roles = Set.of(
+                    roleService.findOrCreateRole(UserRoles.USER),
+                    roleService.findOrCreateRole(UserRoles.STUDENT));
+        }
+
         User newUser = User.builder()
                 .name(userDto.getName())
                 .email(userDto.getEmail())
@@ -89,10 +100,7 @@ public class UserService implements UserDetailsService {
                 .refresh(tokenRefresh).build();
         tokenService.createToken(tokenCreateDTO, newUser);
 
-        return UserCreateResDTO.builder()
-                .user(createdUser)
-                .accessToken(tokenAccess)
-                .refreshToken(tokenRefresh).build();
+        return UserCreateResDTO.builder().user(createdUser).accessToken(tokenAccess).refreshToken(tokenRefresh).build();
     }
 
     public User updateUser(UserUpdateDTO dto, long id) {

@@ -5,9 +5,9 @@ import kafoor.users.user_service.constants.EmailConstants;
 import kafoor.users.user_service.constants.NicknameConstants;
 import kafoor.users.user_service.constants.PasswordConstants;
 import kafoor.users.user_service.constants.Regexps;
+import kafoor.users.user_service.models.enums.RegisterRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -20,17 +20,23 @@ public class UserCreateReqDTO {
 
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Incorrect email")
-    @Size(min = EmailConstants.MIN_LENGTH_EMAIL, max = EmailConstants.MAX_LENGTH_EMAIL, message = "Email length should be" + EmailConstants.MIN_LENGTH_EMAIL + "to" + EmailConstants.MAX_LENGTH_EMAIL + "characters")
+    @Size(min = EmailConstants.MIN_LENGTH_EMAIL, max = EmailConstants.MAX_LENGTH_EMAIL, message = "Email length should be"
+            + EmailConstants.MIN_LENGTH_EMAIL + "to" + EmailConstants.MAX_LENGTH_EMAIL + "characters")
     private String email;
 
     @NotBlank(message = "Nickname is mandatory")
     @Pattern(regexp = Regexps.regexNickname, message = "The nickname should start with @")
-    @Size(min = NicknameConstants.MIN_LENGTH_NICKNAME, max = NicknameConstants.MAX_LENGTH_NICKNAME, message = "Password length should be " + NicknameConstants.MIN_LENGTH_NICKNAME + " to " + NicknameConstants.MAX_LENGTH_NICKNAME + " characters")
+    @Size(min = NicknameConstants.MIN_LENGTH_NICKNAME, max = NicknameConstants.MAX_LENGTH_NICKNAME, message = "Password length should be "
+            + NicknameConstants.MIN_LENGTH_NICKNAME + " to " + NicknameConstants.MAX_LENGTH_NICKNAME + " characters")
     private String nickname;
 
     @NotBlank(message = "Password is mandatory")
-    @Size(min = PasswordConstants.MIN_LENGTH_PASSWORD, max = PasswordConstants.MAX_LENGTH_PASSWORD, message = "Password length should be " + PasswordConstants.MIN_LENGTH_PASSWORD + " to " + PasswordConstants.MAX_LENGTH_PASSWORD + " characters")
+    @Size(min = PasswordConstants.MIN_LENGTH_PASSWORD, max = PasswordConstants.MAX_LENGTH_PASSWORD, message = "Password length should be "
+            + PasswordConstants.MIN_LENGTH_PASSWORD + " to " + PasswordConstants.MAX_LENGTH_PASSWORD + " characters")
     private String password;
+
+    @NotNull(message = "Role is mandatory")
+    private RegisterRole role;
 
     @Override
     public String toString() {
