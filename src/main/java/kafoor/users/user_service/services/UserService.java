@@ -46,6 +46,10 @@ public class UserService implements UserDetailsService {
         return users;
     }
 
+    public List<User> findAllUsersByIds(List<Long> ids) {
+        return userRepo.findAllByIdIn(ids);
+    }
+
     public User findUserById(long id) {
         return userRepo.findById(id).orElseThrow(() -> new NotFound("User not found by id"));
     }
@@ -81,6 +85,8 @@ public class UserService implements UserDetailsService {
                     roleService.findOrCreateRole(UserRoles.USER),
                     roleService.findOrCreateRole(UserRoles.STUDENT));
         }
+
+        System.out.println(roles.size());
 
         User newUser = User.builder()
                 .name(userDto.getName())

@@ -106,4 +106,12 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.ok("User successfully deleted");
     }
+
+    @SecurityRequirement(name = "JWT")
+    @PostMapping("/by-ids")
+    public ResponseEntity<List<User>> findUsersByIds(@RequestBody UsersByIds dto) {
+        List<User> users = userService.findAllUsersByIds(dto.getUsersId());
+        return ResponseEntity.ok(users);
+    }
+
 }
