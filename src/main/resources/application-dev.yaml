@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/kafoor-users
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    debug: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+error:
+  include-stacktrace: never
+  include-message: always
+token:
+  access:
+    secret: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    lifetime: 3600000
+  refresh:
+    secret: qtOHp8hSG4oFPHuPmRgQTkdjFcTSDkcmtDWVqTPuz0heBRjaPI9mrrYmHk1o9f3y
+    lifetime: 3600000
+generator:
+  secret: mojave

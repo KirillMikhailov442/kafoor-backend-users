@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: users
+server:
+  port: 8081
+logging:
+  level:
+    root: INFO
