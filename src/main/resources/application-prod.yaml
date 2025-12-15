@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    debug: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: false
+error:
+  include-stacktrace: never
+  include-message: never
+token:
+  access:
+    secret: ${ACCESS_SECRET}
+    lifetime: ${ACCESS_LIFETIME}
+  refresh:
+    secret: ${REFRESH_SECRET}
+    lifetime: ${REFRESH_LIFETIME}
+generator:
+  secret: ${GENERATOR_SECRET}
