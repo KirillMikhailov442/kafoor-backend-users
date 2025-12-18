@@ -29,7 +29,6 @@ import java.time.LocalDateTime;
  * @see UserRole
  * @see Entity
  * @see Table
- * @since 1.0
  */
 @Getter
 @Setter
