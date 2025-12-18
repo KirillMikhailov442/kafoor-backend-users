@@ -3,6 +3,8 @@ spring:
     active: dev
   application:
     name: users
+    autoconfigure:
+      exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 server:
   port: 8081
 logging:
