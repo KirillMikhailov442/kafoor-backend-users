@@ -20,7 +20,7 @@ public class LoginResponse {
     @Override
     public String toString(){
         return "LoginResponse:" +
-                "\n\tuser:          " + user +
+                "\n\tuser:         " + user +
                 "\n\taccessToken:  " + accessToken +
                 "\n\trefreshToken: " + refreshToken;
     }

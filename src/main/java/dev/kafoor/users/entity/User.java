@@ -26,9 +26,6 @@ import java.util.Set;
  * А также уникальное ограничение на комбинацию email и nickname.
  * </p>
  *
- * @author Kafoor Dev Team
- * @version 1.0
- * @since 2024
  */
 @Getter
 @Setter
@@ -123,6 +120,7 @@ public class User {
      * При удалении пользователя все связанные токены также удаляются.
      * </p>
      */
+    @Builder.Default
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> tokens = new ArrayList<>();
 
