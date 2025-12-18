@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface TokenRepo extends JpaRepository<Token, Long> {
     public List<Token> findAllByUserId(long userId);
 
-    public Optional<Token> findByRefreshToken(String refresh);
+    public Optional<Token> findByRefresh(String refresh);
 
     Optional<Token> findByUserAndUserAgentAndIp(User user, String userAgent, String ip);
 
