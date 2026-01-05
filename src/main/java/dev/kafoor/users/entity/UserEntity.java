@@ -40,7 +40,7 @@ import java.util.Set;
         }, uniqueConstraints = {
         @UniqueConstraint(name = "uk_email_nickname", columnNames = {"email", "nickname"})
 })
-public class User {
+public class UserEntity {
 
     /**
      * Уникальный идентификатор пользователя.
@@ -110,7 +110,7 @@ public class User {
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<Role> roles;
+    private Set<RoleEntity> roles;
 
     /**
      * Список токенов, связанных с пользователем.
@@ -122,7 +122,7 @@ public class User {
      */
     @Builder.Default
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Token> tokens = new ArrayList<>();
+    private List<TokenEntity> tokenEntities = new ArrayList<>();
 
     /**
      * Дата и время создания записи пользователя.

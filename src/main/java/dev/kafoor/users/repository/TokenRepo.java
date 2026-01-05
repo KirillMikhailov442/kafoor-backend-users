@@ -1,18 +1,18 @@
 package dev.kafoor.users.repository;
 
-import dev.kafoor.users.entity.Token;
-import dev.kafoor.users.entity.User;
+import dev.kafoor.users.entity.TokenEntity;
+import dev.kafoor.users.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface TokenRepo extends JpaRepository<Token, Long> {
-    public List<Token> findAllByUserId(long userId);
+public interface TokenRepo extends JpaRepository<TokenEntity, Long> {
+    public List<TokenEntity> findAllByUserId(long userId);
 
-    public Optional<Token> findByRefresh(String refresh);
+    public Optional<TokenEntity> findByRefresh(String refresh);
 
-    Optional<Token> findByUserAndUserAgentAndIp(User user, String userAgent, String ip);
+    Optional<TokenEntity> findByUserAndUserAgentAndIp(UserEntity userEntity, String userAgent, String ip);
 
-    Optional<Token> findByUserIdAndUserAgentAndIp(long userId, String userAgent, String ip);
+    Optional<TokenEntity> findByUserIdAndUserAgentAndIp(long userId, String userAgent, String ip);
 }

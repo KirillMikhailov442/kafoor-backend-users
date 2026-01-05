@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 /**
  * Сущность, представляющая токен обновления (refresh token) для аутентификации пользователя.
  * <p>
- * Каждый токен связан с конкретным пользователем ({@link User}) и содержит информацию
+ * Каждый токен связан с конкретным пользователем ({@link UserEntity}) и содержит информацию
  * о сессии, включая IP-адрес и User-Agent клиента. Токены используются для поддержания
  * аутентификации пользователя без необходимости повторного ввода учетных данных.
  * </p>
@@ -32,7 +32,7 @@ import java.time.LocalDateTime;
  * </pre>
  * </p>
  *
- * @see User
+ * @see UserEntity
  * @see Entity
  * @see Table
  */
@@ -46,7 +46,7 @@ import java.time.LocalDateTime;
         uniqueConstraints = {
                 @UniqueConstraint(name = "uk_ip_user_agent", columnNames = {"ip", "user_agent"})
         })
-public class Token {
+public class TokenEntity {
 
     /**
      * Уникальный идентификатор токена.
@@ -62,15 +62,15 @@ public class Token {
     /**
      * Пользователь, которому принадлежит токен.
      * <p>
-     * Устанавливается связь "многие-к-одному" с сущностью {@link User}.
+     * Устанавливается связь "многие-к-одному" с сущностью {@link UserEntity}.
      * Токен всегда должен быть связан с пользователем (nullable = false).
      * </p>
      *
-     * @see User
+     * @see UserEntity
      */
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity user;
 
     /**
      * Токен обновления (refresh token).
