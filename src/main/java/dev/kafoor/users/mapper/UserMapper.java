@@ -1,11 +1,12 @@
 package dev.kafoor.users.mapper;
 
-import dev.kafoor.users.dto.internal.UserCreate;
-import dev.kafoor.users.dto.internal.UserCreated;
+import dev.kafoor.users.dto.internal.*;
+import dev.kafoor.users.dto.request.LoginRequest;
 import dev.kafoor.users.dto.request.RegisterRequest;
+import dev.kafoor.users.dto.request.UserUpdateRequest;
 import dev.kafoor.users.dto.response.LoginResponse;
 import dev.kafoor.users.dto.response.UserResponse;
-import dev.kafoor.users.entity.User;
+import dev.kafoor.users.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -20,13 +21,13 @@ public interface UserMapper {
                 .build();
     }
 
-    default UserCreated toUserCreated(User user, String accessToken, String refreshToken){
+    default UserCreated toUserCreated(UserEntity userEntity, String accessToken, String refreshToken){
         return UserCreated.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .isConfirmed(user.isConfirmed())
+                .id(userEntity.getId())
+                .name(userEntity.getName())
+                .email(userEntity.getEmail())
+                .nickname(userEntity.getNickname())
+                .isConfirmed(userEntity.isConfirmed())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -47,5 +48,31 @@ public interface UserMapper {
                 .build();
     }
 
-    User toEntity(UserResponse userResponse);
+    default LoginResponse toLoginResponse(UserLogined userLogined){
+        UserResponse user = UserResponse.builder()
+                .name(userLogined.getUser().getName())
+                .email(userLogined.getUser().getEmail())
+                .nickname(userLogined.getUser().getNickname())
+                .isConfirmed(userLogined.getUser().isConfirmed())
+                .build();
+
+        return LoginResponse.builder()
+                .user(user)
+                .accessToken(userLogined.getAccessToken())
+                .refreshToken(userLogined.getRefreshToken())
+                .build();
+    }
+
+    @Mapping(target = "roles", ignore = true)
+    UserResponse toResponse(UserEntity user);
+
+    UserLogin toUserLogin(LoginRequest loginResponse);
+
+    default UserUpdate toUserUpdate(UserUpdateRequest request){
+        return UserUpdate.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .nickname(request.getNickname())
+                .build();
+    }
 }

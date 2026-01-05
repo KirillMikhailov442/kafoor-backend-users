@@ -1,6 +1,6 @@
 package dev.kafoor.users.security;
 
-import dev.kafoor.users.entity.User;
+import dev.kafoor.users.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,14 +14,14 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class UserPrincipal implements UserDetails {
-    private final User user;
+    private final UserEntity userEntity;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (user.getRoles() == null) {
+        if (userEntity.getRoles() == null) {
             return Collections.emptySet();
         }
-        return user.getRoles().stream()
+        return userEntity.getRoles().stream()
                 .filter(Objects::nonNull)
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
                 .collect(Collectors.toSet());
@@ -29,16 +29,16 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public @Nullable String getPassword() {
-        return user.getPasswordHash();
+        return userEntity.getPasswordHash();
     }
 
     @Override
     public String getUsername() {
-        return String.valueOf(user.getId());
+        return String.valueOf(userEntity.getId());
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return user.getDeactivatedAt() != null;
+        return userEntity.getDeactivatedAt() != null;
     }
 }

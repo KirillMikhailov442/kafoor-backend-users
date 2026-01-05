@@ -39,7 +39,7 @@ import java.time.LocalDateTime;
 @Table(name = "roles", indexes = {
         @Index(name = "idx_role_name", columnList = "name")
 })
-public class Role {
+public class RoleEntity {
 
     /**
      * Уникальный идентификатор роли.
