@@ -1,6 +1,6 @@
 package dev.kafoor.users.util;
 
-import dev.kafoor.users.dto.internal.HttpHeader;
+import dev.kafoor.users.dto.v1.internal.HttpHeader;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 

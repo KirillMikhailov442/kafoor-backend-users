@@ -18,9 +18,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleException(BaseException ex, HttpServletRequest request){
         Map<String, Object> responseBody = new HashMap<>(3);
 
-        responseBody.put("timestamp", ex.getDate());
         responseBody.put("message", ex.getMessage());
         responseBody.put("path", request.getServletPath());
+        responseBody.put("timestamp", ex.getDate());
 
         return new ResponseEntity<>(responseBody, ex.getStatus());
     }

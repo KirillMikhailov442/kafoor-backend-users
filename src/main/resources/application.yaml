@@ -10,3 +10,5 @@ server:
 logging:
   level:
     root: INFO
+  file:
+    name: app.log

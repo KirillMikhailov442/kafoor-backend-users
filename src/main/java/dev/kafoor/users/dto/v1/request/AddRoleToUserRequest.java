@@ -3,24 +3,18 @@ package dev.kafoor.users.dto.v1.request;
 import dev.kafoor.users.annotation.ValidEnumValue;
 import dev.kafoor.users.entity.enums.UserRole;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RemoveRoleFromUserRequest {
-    @NotNull(message = "id is required")
-    @Positive(message = "id must be positive number")
-    private Long id;
-
+public class AddRoleToUserRequest {
     @ValidEnumValue(message = "role must be a valid UserRole value")
     @NotNull(message = "role is required")
     private UserRole role;
 
     public String toString(){
-        return "RemoveRoleFromUserRequest: " +
-                "\n\tid:    " + id +
+        return "AddRoleToUserRequest: " +
                 "\n\trole:  " + role.toString();
     }
 }

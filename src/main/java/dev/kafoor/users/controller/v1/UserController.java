@@ -11,9 +11,11 @@ import dev.kafoor.users.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,20 +25,24 @@ import java.util.Objects;
 @SecurityRequirement(name = "JWT")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(name = "/api/v1/user")
+@Validated
+@RequestMapping("api/v1/users")
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getOne(@PathVariable long id){
+    public ResponseEntity<UserResponse> getOne(
+            @PathVariable
+            @Positive(message = "id must be a positive number")
+            Long id){
         UserEntity userEntity = userService.findUserByIdOrThrow(id);
-        return ResponseEntity.ok(userMapper.toResponse(userEntity));
+        return ResponseEntity.ok(userMapper.toUserResponse(userEntity));
     }
 
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAll(){
-        List<UserResponse> users = userService.findAllUsers().stream().map(userMapper::toResponse).toList();
+        List<UserResponse> users = userService.findAllUsers().stream().map(userMapper::toUserResponse).toList();
         return ResponseEntity.ok(users);
     }
 
@@ -44,19 +50,21 @@ public class UserController {
     public ResponseEntity<UserResponse> profile(){
         long userId = Long.parseLong(Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName());
         UserEntity user = userService.findUserByIdOrThrow(userId);
-        return ResponseEntity.ok(userMapper.toResponse(user));
+        return ResponseEntity.ok(userMapper.toUserResponse(user));
     }
 
     @PutMapping
     public ResponseEntity<UserResponse> update(@Valid @RequestBody UserUpdateRequest request){
         long userId = Long.parseLong(Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName());
         UserEntity userEntity = userService.updateUser(userMapper.toUserUpdate(request), userId);
-
-        return ResponseEntity.ok(userMapper.toResponse(userEntity));
+        return ResponseEntity.ok(userMapper.toUserResponse(userEntity));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id) {
+    public ResponseEntity<String> delete(
+            @PathVariable
+            @Positive(message = "id must be a positive number")
+            Long id) {
         long userId = Long.parseLong(Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName());
         if(userId != id){
             throw new BadRequest("you can't delete someone else's account");

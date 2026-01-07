@@ -23,7 +23,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType("application/json;charset=UTF-8");
 
         Map<String, Object> responseBody = Map.of(
-                "message", "you do not have sufficient permissions to perform this action.",
+                "message", "you do not have sufficient permissions to perform this action",
                 "path", request.getRequestURI(),
                 "timestamp", System.currentTimeMillis()
         );
