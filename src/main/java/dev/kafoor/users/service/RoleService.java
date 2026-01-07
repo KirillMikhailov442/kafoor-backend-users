@@ -25,7 +25,7 @@ public class RoleService {
     }
 
     public RoleEntity findRoleByIdOrThrow(long id) {
-        return roleRepo.findById(id).orElseThrow(() -> new NotFound("Role not found by id " + id));
+        return roleRepo.findById(id).orElseThrow(() -> new NotFound("role not found by id " + id));
     }
 
     public Optional<RoleEntity> findRoleByName(UserRole name) {
@@ -33,12 +33,12 @@ public class RoleService {
     }
 
     public RoleEntity findRoleByNameOrThrow(UserRole name) {
-        return roleRepo.findByName(name).orElseThrow(() -> new NotFound("Role not found by name " + name));
+        return roleRepo.findByName(name).orElseThrow(() -> new NotFound("role not found by name " + name));
     }
 
     public RoleEntity createRole(UserRole name) {
         if (roleRepo.existsByName(name)) {
-            throw new Conflict(String.format("Role %s already exists in the database", name));
+            throw new Conflict(String.format("role %s already exists in the database", name));
         }
         RoleEntity newRole = RoleEntity.builder().name(name).build();
         roleRepo.save(newRole);

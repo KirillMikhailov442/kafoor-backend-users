@@ -1,11 +1,12 @@
 package dev.kafoor.users.mapper;
 
-import dev.kafoor.users.dto.internal.*;
-import dev.kafoor.users.dto.request.LoginRequest;
-import dev.kafoor.users.dto.request.RegisterRequest;
-import dev.kafoor.users.dto.request.UserUpdateRequest;
-import dev.kafoor.users.dto.response.LoginResponse;
-import dev.kafoor.users.dto.response.UserResponse;
+import dev.kafoor.users.dto.v1.internal.*;
+import dev.kafoor.users.dto.v1.request.LoginRequest;
+import dev.kafoor.users.dto.v1.request.RegisterRequest;
+import dev.kafoor.users.dto.v1.request.UserUpdateRequest;
+import dev.kafoor.users.dto.v1.response.LoginResponse;
+import dev.kafoor.users.dto.v1.response.UserResponse;
+import dev.kafoor.users.entity.RoleEntity;
 import dev.kafoor.users.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -63,8 +64,13 @@ public interface UserMapper {
                 .build();
     }
 
-    @Mapping(target = "roles", ignore = true)
-    UserResponse toResponse(UserEntity user);
+    @Mapping(source = "confirmed", target = "isConfirmed")
+    @Mapping(source = "roles", target = "roles")
+    UserResponse toUserResponse(UserEntity userEntity);
+
+    default String mapRoleToString(RoleEntity role) {
+        return role == null || role.getName() == null ? null : role.getName().name();
+    }
 
     UserLogin toUserLogin(LoginRequest loginResponse);
 

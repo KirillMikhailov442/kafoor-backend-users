@@ -1,6 +1,6 @@
 package dev.kafoor.users.service;
 
-import dev.kafoor.users.dto.internal.TokenCreate;
+import dev.kafoor.users.dto.v1.internal.TokenCreate;
 import dev.kafoor.users.entity.TokenEntity;
 import dev.kafoor.users.entity.UserEntity;
 import dev.kafoor.users.exception.NotFound;
@@ -16,7 +16,7 @@ import java.util.Optional;
 public class TokenService {
     private final TokenRepo tokenRepo;
 
-    public List<TokenEntity> findAllTokens(){
+    public List<TokenEntity> findAllTokens() {
         return tokenRepo.findAll();
     }
 
@@ -30,15 +30,15 @@ public class TokenService {
 
     public TokenEntity findTokenByIdOrThrow(long id) {
         return tokenRepo.findById(id)
-                .orElseThrow(() -> new NotFound("Token not found with such id"));
+                .orElseThrow(() -> new NotFound("token not found with such id"));
     }
 
-    public Optional<TokenEntity> findTokenByRefresh(String refresh){
+    public Optional<TokenEntity> findTokenByRefresh(String refresh) {
         return tokenRepo.findByRefresh(refresh);
     }
 
-    public TokenEntity findTokenByRefreshOrThrow(String refresh){
-        return tokenRepo.findByRefresh(refresh).orElseThrow(() -> new NotFound("Token not found"));
+    public TokenEntity findTokenByRefreshOrThrow(String refresh) {
+        return tokenRepo.findByRefresh(refresh).orElseThrow(() -> new NotFound("token not found"));
     }
 
     public Optional<TokenEntity> findTokenByUserIdAndUserAgentAndIp(long userId, String userAgent, String ip) {
@@ -47,7 +47,7 @@ public class TokenService {
 
     public TokenEntity findTokenByUserIdAndUserAgentAndIpOrThrow(long userId, String userAgent, String ip) {
         return tokenRepo.findByUserIdAndUserAgentAndIp(userId, userAgent, ip)
-                .orElseThrow(() -> new NotFound("Token not found"));
+                .orElseThrow(() -> new NotFound("token not found"));
     }
 
     public Optional<TokenEntity> findTokenByUserAndUserAgentAndIp(UserEntity userEntity, String userAgent, String ip) {
@@ -56,10 +56,10 @@ public class TokenService {
 
     public TokenEntity findTokenByUserAndUserAgentAndIpOrThrow(UserEntity userEntity, String userAgent, String ip) {
         return tokenRepo.findByUserAndUserAgentAndIp(userEntity, userAgent, ip)
-                .orElseThrow(() -> new NotFound("Token not found"));
+                .orElseThrow(() -> new NotFound("token not found"));
     }
 
-    public TokenEntity createToken(TokenCreate dto, UserEntity userEntity){
+    public TokenEntity createToken(TokenCreate dto, UserEntity userEntity) {
         TokenEntity tokenEntity = TokenEntity.builder()
                 .user(userEntity)
                 .refresh(dto.getRefresh())

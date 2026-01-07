@@ -1,5 +1,7 @@
 package dev.kafoor.users.dto.v1.response;
 
+import dev.kafoor.users.entity.enums.UserRole;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +9,7 @@ import lombok.NoArgsConstructor;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -20,7 +22,12 @@ public class UserResponse {
     private String email;
     private String nickname;
     private boolean isConfirmed;
-    private List<String> roles;
+
+    @Schema(
+            description = "User roles",
+            implementation = UserRole.class
+    )
+    private Set<UserRole> roles;
 
     @Override
     public String toString(){
