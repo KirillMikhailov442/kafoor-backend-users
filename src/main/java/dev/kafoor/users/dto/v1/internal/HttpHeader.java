@@ -1,4 +1,4 @@
-package dev.kafoor.users.dto.internal;
+package dev.kafoor.users.dto.v1.internal;
 
 import lombok.*;
 

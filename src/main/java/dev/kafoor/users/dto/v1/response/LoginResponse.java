@@ -1,4 +1,4 @@
-package dev.kafoor.users.dto.response;
+package dev.kafoor.users.dto.v1.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,14 +12,16 @@ import tools.jackson.databind.annotation.JsonNaming;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class TokensResponse {
+public class LoginResponse {
+    private UserResponse user;
     private String accessToken;
     private String refreshToken;
 
     @Override
     public String toString(){
-        return "TokensResponse" +
-                "\n\taccessToken:   " + accessToken +
-                "\n\trefreshToken:  " + refreshToken;
+        return "LoginResponse:" +
+                "\n\tuser:         " + user +
+                "\n\taccessToken:  " + accessToken +
+                "\n\trefreshToken: " + refreshToken;
     }
 }

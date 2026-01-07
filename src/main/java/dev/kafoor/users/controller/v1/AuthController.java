@@ -1,13 +1,13 @@
-package dev.kafoor.users.controller;
+package dev.kafoor.users.controller.v1;
 
-import dev.kafoor.users.dto.internal.HttpHeader;
-import dev.kafoor.users.dto.internal.UserCreated;
-import dev.kafoor.users.dto.internal.UserLogined;
-import dev.kafoor.users.dto.request.LoginRequest;
-import dev.kafoor.users.dto.request.RegisterRequest;
-import dev.kafoor.users.dto.request.TokenCreateRequest;
-import dev.kafoor.users.dto.response.LoginResponse;
-import dev.kafoor.users.dto.response.TokensResponse;
+import dev.kafoor.users.dto.v1.internal.HttpHeader;
+import dev.kafoor.users.dto.v1.internal.UserCreated;
+import dev.kafoor.users.dto.v1.internal.UserLogined;
+import dev.kafoor.users.dto.v1.request.LoginRequest;
+import dev.kafoor.users.dto.v1.request.RegisterRequest;
+import dev.kafoor.users.dto.v1.request.TokenCreateRequest;
+import dev.kafoor.users.dto.v1.response.LoginResponse;
+import dev.kafoor.users.dto.v1.response.TokensResponse;
 import dev.kafoor.users.entity.TokenEntity;
 import dev.kafoor.users.entity.enums.Token;
 import dev.kafoor.users.exception.BadRequest;
@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +49,7 @@ public class AuthController {
     public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest request, HttpServletRequest http){
         HttpHeader header = HttpHeaderExtractor.extract(http);
         UserCreated newUser = userService.createUser(userMapper.toUserCreate(request), header);
-        return ResponseEntity.ok(userMapper.toRegisterResponse(newUser));
+        return new ResponseEntity<>(userMapper.toRegisterResponse(newUser), HttpStatus.CREATED);
     }
 
     @PatchMapping("/update-tokens")

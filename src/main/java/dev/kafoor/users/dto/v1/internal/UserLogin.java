@@ -1,6 +1,5 @@
-package dev.kafoor.users.dto.internal;
+package dev.kafoor.users.dto.v1.internal;
 
-import dev.kafoor.users.dto.response.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

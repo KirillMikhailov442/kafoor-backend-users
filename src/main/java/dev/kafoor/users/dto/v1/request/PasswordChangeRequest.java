@@ -1,4 +1,4 @@
-package dev.kafoor.users.dto.request;
+package dev.kafoor.users.dto.v1.request;
 
 import dev.kafoor.users.constant.PasswordConstants;
 import jakarta.validation.constraints.NotBlank;
