@@ -1,27 +1,16 @@
-package dev.kafoor.users.dto.request;
+package dev.kafoor.users.dto.v1.request;
 
 import dev.kafoor.users.constant.EmailConstants;
-import dev.kafoor.users.constant.NicknameConstants;
 import dev.kafoor.users.constant.PasswordConstants;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-
-enum RegisterRole {
-    TEACHER,
-    STUDENT
-}
+import lombok.NoArgsConstructor;
 
 @Getter
-public class RegisterRequest {
-    @NotBlank(message = "name is mandatory")
-    @Size(
-            min = 2,
-            max = 32,
-            message = "name must be between 2 and 32 characters long")
-    private String name;
-
+@NoArgsConstructor
+public class LoginRequest {
     @NotBlank(message = "email must be not empty")
     @Email(message = "email must be valid")
     @Size(
@@ -31,14 +20,6 @@ public class RegisterRequest {
     )
     private String email;
 
-    @NotBlank(message = "nickname must be not empty")
-    @Size(
-            min = NicknameConstants.MIN_LENGTH_NICKNAME,
-            max = NicknameConstants.MAX_LENGTH_NICKNAME,
-            message = "nickname must be between " + NicknameConstants.MIN_LENGTH_NICKNAME + " and " + NicknameConstants.MAX_LENGTH_NICKNAME + " characters long"
-    )
-    private String nickname;
-
     @NotBlank(message = "password must be not empty")
     @Size(
             min = PasswordConstants.MIN_LENGTH_PASSWORD,
@@ -47,14 +28,10 @@ public class RegisterRequest {
     )
     private String password;
 
-    private RegisterRole role;
-
     @Override
     public String toString(){
-        return "RegisterRequest:" +
-                "\n\tname:     " + name +
+        return "LoginRequest:" +
                 "\n\temail:    " + email +
-                "\n\tnickname: " + nickname +
                 "\n\tpassword: " + password;
     }
 }

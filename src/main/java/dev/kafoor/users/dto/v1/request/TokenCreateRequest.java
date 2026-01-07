@@ -1,4 +1,4 @@
-package dev.kafoor.users.dto.request;
+package dev.kafoor.users.dto.v1.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

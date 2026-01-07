@@ -1,9 +1,9 @@
-package dev.kafoor.users.controller;
+package dev.kafoor.users.controller.v1;
 
-import dev.kafoor.users.dto.internal.PasswordChange;
-import dev.kafoor.users.dto.request.PasswordChangeRequest;
-import dev.kafoor.users.dto.request.UserUpdateRequest;
-import dev.kafoor.users.dto.response.UserResponse;
+import dev.kafoor.users.dto.v1.internal.PasswordChange;
+import dev.kafoor.users.dto.v1.request.PasswordChangeRequest;
+import dev.kafoor.users.dto.v1.request.UserUpdateRequest;
+import dev.kafoor.users.dto.v1.response.UserResponse;
 import dev.kafoor.users.entity.UserEntity;
 import dev.kafoor.users.exception.BadRequest;
 import dev.kafoor.users.mapper.UserMapper;

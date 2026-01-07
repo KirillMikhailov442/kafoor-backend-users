@@ -1,6 +1,5 @@
-package dev.kafoor.users.dto.internal;
+package dev.kafoor.users.dto.v1.internal;
 
-import dev.kafoor.users.dto.request.PasswordChangeRequest;
 import lombok.Builder;
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package dev.kafoor.users.dto.response;
+package dev.kafoor.users.dto.v1.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
