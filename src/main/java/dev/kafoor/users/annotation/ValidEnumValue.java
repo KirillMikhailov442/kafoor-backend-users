@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = EnumValidator.class)
 public @interface ValidEnumValue {
-    String message() default "Invalid enum value";
+    String message() default "invalid enum value";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

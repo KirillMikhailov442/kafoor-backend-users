@@ -5,6 +5,10 @@ spring:
     name: users
     autoconfigure:
       exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
 server:
   port: 8081
 logging:

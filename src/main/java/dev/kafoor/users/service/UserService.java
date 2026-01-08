@@ -1,6 +1,7 @@
 package dev.kafoor.users.service;
 
 import dev.kafoor.users.dto.v1.internal.*;
+import dev.kafoor.users.dto.v1.request.enums.RegisterRole;
 import dev.kafoor.users.entity.RoleEntity;
 import dev.kafoor.users.entity.TokenEntity;
 import dev.kafoor.users.entity.UserEntity;
@@ -79,7 +80,13 @@ public class UserService implements UserDetailsService {
         if (existsByNickname(userDto.getNickname()))
             throw new Conflict(("a user with such nickname already exists"));
 
-        Set<RoleEntity> roles = Set.of(roleService.findOrCreateRole(UserRole.USER));
+        UserRole newUserRole = userDto.getRole().equals(RegisterRole.STUDENT)
+                ? UserRole.STUDENT
+                : UserRole.TEACHER;
+
+        Set<RoleEntity> roles = Set.of(
+                roleService.findOrCreateRole(UserRole.USER),
+                roleService.findOrCreateRole(newUserRole));
 
         UserEntity newUserEntity = UserEntity.builder()
                 .name(userDto.getName())
@@ -93,6 +100,13 @@ public class UserService implements UserDetailsService {
         UserPrincipal userPrincipal = loadUserByUsername(String.valueOf(newUserEntity.getId()));
         String accessToken = jwtService.generateToken(userPrincipal, Token.ACCESS);
         String refreshToken = jwtService.generateToken(userPrincipal, Token.REFRESH);
+
+        TokenCreate tokenCreateDto = TokenCreate.builder()
+                .ip(header.getIp())
+                .userAgent(header.getUserAgent())
+                .refresh(refreshToken)
+                .build();
+        tokenService.createToken(tokenCreateDto, createdUserEntity);
 
         return UserCreated.builder()
                 .id(createdUserEntity.getId())

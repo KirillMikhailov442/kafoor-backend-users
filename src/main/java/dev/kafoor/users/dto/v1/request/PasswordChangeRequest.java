@@ -12,11 +12,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PasswordChangeRequest {
     @NotBlank(message = "Current password is mandatory")
-    @Size(min = PasswordConstants.MIN_LENGTH_PASSWORD, max = PasswordConstants.MAX_LENGTH_PASSWORD, message = "Password length should be " + PasswordConstants.MIN_LENGTH_PASSWORD + " to " + PasswordConstants.MAX_LENGTH_PASSWORD + " characters")
+    @Size(
+            min = PasswordConstants.MIN_LENGTH_PASSWORD,
+            max = PasswordConstants.MAX_LENGTH_PASSWORD,
+            message = "Password length should be " + PasswordConstants.MIN_LENGTH_PASSWORD + " to " + PasswordConstants.MAX_LENGTH_PASSWORD + " characters"
+    )
     private String currentPassword;
 
     @NotBlank(message = "New password is mandatory")
-    @Size(min = PasswordConstants.MIN_LENGTH_PASSWORD, max = PasswordConstants.MAX_LENGTH_PASSWORD, message = "Password length should be " + PasswordConstants.MIN_LENGTH_PASSWORD + " to " + PasswordConstants.MAX_LENGTH_PASSWORD + " characters")
+    @Size(
+            min = PasswordConstants.MIN_LENGTH_PASSWORD,
+            max = PasswordConstants.MAX_LENGTH_PASSWORD,
+            message = "Password length should be " + PasswordConstants.MIN_LENGTH_PASSWORD + " to " + PasswordConstants.MAX_LENGTH_PASSWORD + " characters"
+    )
     private String newPassword;
 
     @Override

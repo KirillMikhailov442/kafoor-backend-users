@@ -1,5 +1,6 @@
 package dev.kafoor.users.dto.v1.internal;
 
+import dev.kafoor.users.dto.v1.request.enums.RegisterRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,12 +15,14 @@ public class UserCreate {
     private String email;
     private String nickname;
     private String password;
+    private RegisterRole role;
 
     @Override
     public String toString(){
         return "UserCreate:" +
-                "\n\tname:         " + name +
-                "\n\temail:        " + email +
-                "\n\tnickname:     " + nickname;
+                "\n\tname:      " + name +
+                "\n\temail:     " + email +
+                "\n\tnickname:  " + nickname +
+                "\n\trole:      " + role.name();
     }
 }
