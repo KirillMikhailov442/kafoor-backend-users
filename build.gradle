@@ -51,6 +51,8 @@ dependencies {
 	runtimeOnly 'ch.qos.logback:logback-classic'
 
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
+
+	implementation 'org.flywaydb:flyway-core'
 }
 
 tasks.named('test') {
