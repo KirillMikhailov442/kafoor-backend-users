@@ -11,7 +11,6 @@ import tools.jackson.databind.annotation.JsonNaming;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class LoginResponse {
     private UserResponse user;
     private String accessToken;

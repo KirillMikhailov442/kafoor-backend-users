@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "tokens",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_ip_user_agent", columnNames = {"ip", "user_agent"})
+                @UniqueConstraint(name = "uk_ip_user_agent_user_id", columnNames = {"ip", "user_agent", "user_id"})
         })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TokenEntity {

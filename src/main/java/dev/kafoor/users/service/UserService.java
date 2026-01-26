@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -39,6 +40,10 @@ public class UserService implements UserDetailsService {
         if (userEntities.isEmpty())
             throw new NotFound("users not found");
         return userEntities;
+    }
+
+    public  List<UserEntity> findAllUsersByIds(List<Long> ids){
+        return userRepo.findAllByIdIn(ids);
     }
 
     public Optional<UserEntity> findUserById(long id) {
@@ -108,12 +113,15 @@ public class UserService implements UserDetailsService {
                 .build();
         tokenService.createToken(tokenCreateDto, createdUserEntity);
 
+        Set<UserRole> userRoleSet = roles.stream().map(RoleEntity::getName).collect(Collectors.toSet());
+
         return UserCreated.builder()
                 .id(createdUserEntity.getId())
                 .name(createdUserEntity.getName())
                 .email(createdUserEntity.getEmail())
                 .nickname(createdUserEntity.getNickname())
                 .isConfirmed(createdUserEntity.isConfirmed())
+                .roles(userRoleSet)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();

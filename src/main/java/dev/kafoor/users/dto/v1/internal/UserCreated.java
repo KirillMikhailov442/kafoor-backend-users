@@ -1,9 +1,12 @@
 package dev.kafoor.users.dto.v1.internal;
 
+import dev.kafoor.users.entity.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @Builder
@@ -15,6 +18,7 @@ public class UserCreated {
     private String email;
     private String nickname;
     private boolean isConfirmed;
+    private Set<UserRole> roles;
     private String accessToken;
     private String refreshToken;
 
@@ -26,6 +30,7 @@ public class UserCreated {
                 "\n\temail:        " + email +
                 "\n\tnickname:     " + nickname +
                 "\n\tisConfirmed:  " + isConfirmed +
+                "\n\troles:        " + roles +
                 "\n\taccessToken:  " + accessToken +
                 "\n\trefreshToken: " + refreshToken;
     }

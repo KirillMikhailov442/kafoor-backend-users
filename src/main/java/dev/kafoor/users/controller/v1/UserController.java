@@ -3,6 +3,7 @@ package dev.kafoor.users.controller.v1;
 import dev.kafoor.users.dto.v1.internal.PasswordChange;
 import dev.kafoor.users.dto.v1.request.PasswordChangeRequest;
 import dev.kafoor.users.dto.v1.request.UserUpdateRequest;
+import dev.kafoor.users.dto.v1.request.UsersByIdsRequest;
 import dev.kafoor.users.dto.v1.response.ErrorResponse;
 import dev.kafoor.users.dto.v1.response.UserResponse;
 import dev.kafoor.users.entity.UserEntity;
@@ -74,6 +75,32 @@ public class UserController {
     public ResponseEntity<List<UserResponse>> getAll() {
         List<UserResponse> users = userService.findAllUsers().stream().map(userMapper::toUserResponse).toList();
         return ResponseEntity.ok(users);
+    }
+
+    @Operation(
+            summary = "Get users by IDs",
+            description = "Returns a list of existing users for the given IDs. Non-existent IDs are ignored."
+    )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "List of user IDs (must be positive integers, max 100 items)",
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = UsersByIdsRequest.class)
+            )
+    )
+    @ApiResponse(responseCode = "200", description = "Users retrieved successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = UserResponse.class))
+            )
+    )
+    @ApiResponse(responseCode = "400", description = "Invalid input: empty, null, negative IDs or too many IDs")
+    @PostMapping("/by-ids")
+    public ResponseEntity<List<UserResponse>> getUsersByIds(@Valid @RequestBody UsersByIdsRequest request){
+        List<UserEntity> userEntities = userService.findAllUsersByIds(request.getIds());
+        List<UserResponse> userResponses = userEntities.stream().map(userMapper::toUserResponse).toList();
+        return ResponseEntity.ok(userResponses);
     }
 
     @Operation(summary = "Get current user's profile", description = "Returns details of the currently authenticated user.")
