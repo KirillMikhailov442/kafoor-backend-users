@@ -8,6 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import dev.kafoor.users.dto.v1.response.ErrorResponse;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +17,12 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> handleException(BaseException ex, HttpServletRequest request){
-        Map<String, Object> responseBody = new HashMap<>(3);
-
-        responseBody.put("message", ex.getMessage());
-        responseBody.put("path", request.getServletPath());
-        responseBody.put("timestamp", ex.getDate());
+    public ResponseEntity<?> handleException(BaseException ex, HttpServletRequest request) {
+        ErrorResponse responseBody = ErrorResponse.builder()
+                .message(ex.getMessage())
+                .path(request.getServletPath())
+                .timestamp(ex.getDate())
+                .build();
 
         return new ResponseEntity<>(responseBody, ex.getStatus());
     }
