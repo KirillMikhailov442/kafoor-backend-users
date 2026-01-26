@@ -1,0 +1,15 @@
+.git
+.gitignore
+.idea/
+.vscode/
+*.iml
+*.log
+
+.gradle/
+build/
+
+logs/
+*.dump
+.DS_Store
+
+Thumbs.db
