@@ -30,6 +30,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.boot:spring-boot-starter-flyway'
+	implementation 'org.flywaydb:flyway-mysql'
 
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
@@ -44,6 +46,7 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-flyway-test'
 
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 
@@ -51,8 +54,6 @@ dependencies {
 	runtimeOnly 'ch.qos.logback:logback-classic'
 
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
-
-	implementation 'org.flywaydb:flyway-core'
 }
 
 tasks.named('test') {
