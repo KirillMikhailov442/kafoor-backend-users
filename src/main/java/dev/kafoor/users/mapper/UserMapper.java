@@ -69,6 +69,7 @@ public interface UserMapper {
                 .email(userLogined.getUser().getEmail())
                 .nickname(userLogined.getUser().getNickname())
                 .isConfirmed(userLogined.getUser().isConfirmed())
+                .roles(userLogined.getUser().getRoles())
                 .build();
 
         return LoginResponse.builder()
