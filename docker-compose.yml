@@ -1,12 +1,13 @@
 version: '3.8'
 services:
   users:
-    image: kafoor-users-api
+    image: users-api
+    container_name: kafoor-users-api
     extra_hosts:
       - "host.docker.internal:host-gateway"
     build: .
     ports:
-      - "8081:8081"
+      - "${SPRING_PORT:-8081}:8081"
     environment:
       SPRING_PROFILES_ACTIVE: prod
       DB_URL: ${DB_URL}
@@ -17,3 +18,4 @@ services:
       REFRESH_SECRET: ${REFRESH_SECRET}
       REFRESH_LIFETIME: ${REFRESH_LIFETIME}
       GENERATOR_SECRET: ${GENERATOR_SECRET}
+    restart: unless-stopped
