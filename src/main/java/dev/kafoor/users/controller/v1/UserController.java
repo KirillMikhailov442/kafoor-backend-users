@@ -37,152 +37,96 @@ import java.util.Objects;
 @Validated
 @RequestMapping("api/v1/users")
 public class UserController {
-    private final UserService userService;
-    private final UserMapper userMapper;
+        private final UserService userService;
+        private final UserMapper userMapper;
 
-    @Operation(summary = "Get user by ID", description = "Returns user details by their unique identifier.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "User successfully retrieved",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid ID (must be a positive number)",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "User with the specified ID not found",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            )
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getOne(
-            @Parameter(description = "Unique user identifier", required = true, example = "123")
-            @PathVariable
-            @Positive(message = "id must be a positive number")
-            Long id) {
-        UserEntity userEntity = userService.findUserByIdOrThrow(id);
-        return ResponseEntity.ok(userMapper.toUserResponse(userEntity));
-    }
-
-    @Operation(summary = "Get all users", description = "Returns a list of all registered users.")
-    @ApiResponse(responseCode = "200", description = "List of users successfully retrieved",
-            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserResponse.class))))
-    @GetMapping
-    public ResponseEntity<List<UserResponse>> getAll() {
-        List<UserResponse> users = userService.findAllUsers().stream().map(userMapper::toUserResponse).toList();
-        return ResponseEntity.ok(users);
-    }
-
-    @Operation(
-            summary = "Get users by IDs",
-            description = "Returns a list of existing users for the given IDs. Non-existent IDs are ignored."
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "List of user IDs (must be positive integers, max 100 items)",
-            required = true,
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = UsersByIdsRequest.class)
-            )
-    )
-    @ApiResponse(responseCode = "200", description = "Users retrieved successfully",
-            content = @Content(
-                    mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = UserResponse.class))
-            )
-    )
-    @ApiResponse(responseCode = "400", description = "Invalid input: empty, null, negative IDs or too many IDs")
-    @PostMapping("/by-ids")
-    public ResponseEntity<List<UserResponse>> getUsersByIds(@Valid @RequestBody UsersByIdsRequest request){
-        List<UserEntity> userEntities = userService.findAllUsersByIds(request.getIds());
-        List<UserResponse> userResponses = userEntities.stream().map(userMapper::toUserResponse).toList();
-        return ResponseEntity.ok(userResponses);
-    }
-
-    @Operation(summary = "Get current user's profile", description = "Returns details of the currently authenticated user.")
-    @ApiResponse(
-            responseCode = "200",
-            description = "Profile successfully retrieved",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)))
-    @GetMapping("/profile")
-    public ResponseEntity<UserResponse> profile() {
-        long userId = Long.parseLong(Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName());
-        UserEntity user = userService.findUserByIdOrThrow(userId);
-        return ResponseEntity.ok(userMapper.toUserResponse(user));
-    }
-
-    @Operation(summary = "Update current user's profile", description = "Updates profile information for the currently authenticated user.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Profile successfully updated",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid request payload",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            )
-    })
-    @PutMapping
-    public ResponseEntity<UserResponse> update(@Valid @RequestBody UserUpdateRequest request) {
-        long userId = Long.parseLong(Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName());
-        UserEntity userEntity = userService.updateUser(userMapper.toUserUpdate(request), userId);
-        return ResponseEntity.ok(userMapper.toUserResponse(userEntity));
-    }
-
-    @Operation(summary = "Delete user", description = "Deletes a user by ID. Only allowed for the user's own account.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "User successfully deleted",
-                    content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Attempt to delete another user's account or invalid ID",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "User not found",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            )
-    })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(
-            @Parameter(description = "Unique user identifier", required = true, example = "123")
-            @PathVariable
-            @Positive(message = "id must be a positive number")
-            Long id) {
-        long userId = Long.parseLong(Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName());
-        if (userId != id) {
-            throw new BadRequest("you can't delete someone else's account");
+        @Operation(summary = "Get user by ID", description = "Returns user details by their unique identifier.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "User successfully retrieved", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))),
+                        @ApiResponse(responseCode = "400", description = "Invalid ID (must be a positive number)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "404", description = "User with the specified ID not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @GetMapping("/{id}")
+        public ResponseEntity<UserResponse> getOne(
+                        @Parameter(description = "Unique user identifier", required = true, example = "123") @PathVariable @Positive(message = "id must be a positive number") Long id) {
+                UserEntity userEntity = userService.findUserByIdOrThrow(id);
+                return ResponseEntity.ok(userMapper.toUserResponse(userEntity));
         }
-        userService.deleteUserById(id);
-        return ResponseEntity.ok("user successfully deleted");
-    }
 
-    @Operation(summary = "Change password", description = "Allows the current user to change their password.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Password successfully changed",
-                    content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Incorrect current password or invalid new password format",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            )
-    })
-    @PatchMapping("/password-change")
-    public ResponseEntity<String> passwordChange(@Valid @RequestBody PasswordChangeRequest request) {
-        long userId = Long.parseLong(Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName());
-        PasswordChange passwordChange = PasswordChange.builder()
-                .currentPassword(request.getCurrentPassword())
-                .newPassword(request.getNewPassword())
-                .build();
-        userService.passwordChange(passwordChange, userId);
-        return ResponseEntity.ok("the password is successfully changed");
-    }
+        @Operation(summary = "Get all users", description = "Returns a list of all registered users.")
+        @ApiResponse(responseCode = "200", description = "List of users successfully retrieved", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserResponse.class))))
+        @GetMapping
+        public ResponseEntity<List<UserResponse>> getAll() {
+                List<UserResponse> users = userService.findAllUsers().stream().map(userMapper::toUserResponse).toList();
+                return ResponseEntity.ok(users);
+        }
+
+        @Operation(summary = "Get users by IDs", description = "Returns a list of existing users for the given IDs. Non-existent IDs are ignored.")
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "List of user IDs (must be positive integers, max 100 items)", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsersByIdsRequest.class)))
+        @ApiResponse(responseCode = "200", description = "Users retrieved successfully", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserResponse.class))))
+        @ApiResponse(responseCode = "400", description = "Invalid input: empty, null, negative IDs or too many IDs")
+        @PostMapping("/by-ids")
+        public ResponseEntity<List<UserResponse>> getUsersByIds(@Valid @RequestBody UsersByIdsRequest request) {
+                List<UserEntity> userEntities = userService.findAllUsersByIds(request.getIds());
+                List<UserResponse> userResponses = userEntities.stream().map(userMapper::toUserResponse).toList();
+                return ResponseEntity.ok(userResponses);
+        }
+
+        @Operation(summary = "Get current user's profile", description = "Returns details of the currently authenticated user.")
+        @ApiResponse(responseCode = "200", description = "Profile successfully retrieved", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)))
+        @GetMapping("/profile")
+        public ResponseEntity<UserResponse> profile() {
+                long userId = Long.parseLong(Objects
+                                .requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName());
+                UserEntity user = userService.findUserByIdOrThrow(userId);
+                return ResponseEntity.ok(userMapper.toUserResponse(user));
+        }
+
+        @Operation(summary = "Update current user's profile", description = "Updates profile information for the currently authenticated user.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Profile successfully updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))),
+                        @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @PutMapping
+        public ResponseEntity<UserResponse> update(@Valid @RequestBody UserUpdateRequest request) {
+                long userId = Long.parseLong(Objects
+                                .requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName());
+                UserEntity userEntity = userService.updateUser(userMapper.toUserUpdate(request), userId);
+                return ResponseEntity.ok(userMapper.toUserResponse(userEntity));
+        }
+
+        @Operation(summary = "Delete user", description = "Deletes a user by ID. Only allowed for the user's own account.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "User successfully deleted", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))),
+                        @ApiResponse(responseCode = "400", description = "Attempt to delete another user's account or invalid ID", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "404", description = "User not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @DeleteMapping("/{id}")
+        public ResponseEntity<String> delete(
+                        @Parameter(description = "Unique user identifier", required = true, example = "123") @PathVariable @Positive(message = "id must be a positive number") Long id) {
+                long userId = Long.parseLong(Objects
+                                .requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName());
+                if (userId != id) {
+                        throw new BadRequest("you can't delete someone else's account");
+                }
+                userService.deleteUserById(id);
+                return ResponseEntity.ok("user successfully deleted");
+        }
+
+        @Operation(summary = "Change password", description = "Allows the current user to change their password.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Password successfully changed", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))),
+                        @ApiResponse(responseCode = "400", description = "Incorrect current password or invalid new password format", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @PatchMapping("/password-change")
+        public ResponseEntity<String> passwordChange(@Valid @RequestBody PasswordChangeRequest request) {
+                long userId = Long.parseLong(Objects
+                                .requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName());
+                PasswordChange passwordChange = PasswordChange.builder()
+                                .currentPassword(request.getCurrentPassword())
+                                .newPassword(request.getNewPassword())
+                                .build();
+                userService.passwordChange(passwordChange, userId);
+                return ResponseEntity.ok("the password is successfully changed");
+        }
 }

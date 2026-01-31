@@ -25,117 +25,48 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RequestMapping("api/v1/admin")
 public class AdminController {
-    private final UserService userService;
+        private final UserService userService;
 
-    @Operation(
-            summary = "Assign a role to a user",
-            description = "Grants a specified role to a user. Requires admin privileges."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Role successfully assigned",
-                    content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid user ID or request format",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Access denied: admin privileges required",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "User or role not found",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            )
-    })
-    @PostMapping("/users/{userId}/roles")
-    public ResponseEntity<String> addRoleToUser(
-            @Parameter(description = "ID of the user to assign the role to", required = true, example = "123")
-            @PathVariable
-            @Positive(message = "id must be a positive number")
-            Long userId,
-            @Valid @RequestBody AddRoleToUserRequest request
-    ) {
-        userService.addRoleToUser(request.getRole(), userId);
-        return ResponseEntity.ok("role was successfully added to the user");
-    }
+        @Operation(summary = "Assign a role to a user", description = "Grants a specified role to a user. Requires admin privileges.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Role successfully assigned", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))),
+                        @ApiResponse(responseCode = "400", description = "Invalid user ID or request format", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "403", description = "Access denied: admin privileges required", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "404", description = "User or role not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @PostMapping("/users/{userId}/roles")
+        public ResponseEntity<String> addRoleToUser(
+                        @Parameter(description = "ID of the user to assign the role to", required = true, example = "123") @PathVariable @Positive(message = "id must be a positive number") Long userId,
+                        @Valid @RequestBody AddRoleToUserRequest request) {
+                userService.addRoleToUser(request.getRole(), userId);
+                return ResponseEntity.ok("role was successfully added to the user");
+        }
 
-    @Operation(
-            summary = "Ban a user",
-            description = "Permanently or temporarily bans a user from the system. Requires admin privileges."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "User successfully banned",
-                    content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid user ID",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Access denied: admin privileges required",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "User not found",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            )
-    })
-    @PatchMapping("/ban/{id}")
-    public ResponseEntity<String> banUser(
-            @Parameter(description = "ID of the user to ban", required = true, example = "123")
-            @PathVariable
-            @Positive(message = "id must be a positive number")
-            Long id
-    ) {
-        userService.banUser(id);
-        return ResponseEntity.ok("user successfully banned");
-    }
+        @Operation(summary = "Ban a user", description = "Permanently or temporarily bans a user from the system. Requires admin privileges.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "User successfully banned", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))),
+                        @ApiResponse(responseCode = "400", description = "Invalid user ID", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "403", description = "Access denied: admin privileges required", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "404", description = "User not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @PatchMapping("/ban/{id}")
+        public ResponseEntity<String> banUser(
+                        @Parameter(description = "ID of the user to ban", required = true, example = "123") @PathVariable @Positive(message = "id must be a positive number") Long id) {
+                userService.banUser(id);
+                return ResponseEntity.ok("user successfully banned");
+        }
 
-    @Operation(
-            summary = "Unban a user",
-            description = "Removes ban status from a previously banned user. Requires admin privileges."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "User successfully unbanned",
-                    content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid user ID",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Access denied: admin privileges required",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "User not found",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            )
-    })
-    @PatchMapping("/unban/{id}")
-    public ResponseEntity<String> unban(
-            @Parameter(description = "ID of the user to unban", required = true, example = "123")
-            @PathVariable
-            @Positive(message = "id must be a positive number")
-            Long id
-    ) {
-        userService.unbanUser(id);
-        return ResponseEntity.ok("user successfully unbanned");
-    }
+        @Operation(summary = "Unban a user", description = "Removes ban status from a previously banned user. Requires admin privileges.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "User successfully unbanned", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))),
+                        @ApiResponse(responseCode = "400", description = "Invalid user ID", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "403", description = "Access denied: admin privileges required", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "404", description = "User not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @PatchMapping("/unban/{id}")
+        public ResponseEntity<String> unban(
+                        @Parameter(description = "ID of the user to unban", required = true, example = "123") @PathVariable @Positive(message = "id must be a positive number") Long id) {
+                userService.unbanUser(id);
+                return ResponseEntity.ok("user successfully unbanned");
+        }
 }

@@ -42,7 +42,7 @@ public class UserService implements UserDetailsService {
         return userEntities;
     }
 
-    public  List<UserEntity> findAllUsersByIds(List<Long> ids){
+    public List<UserEntity> findAllUsersByIds(List<Long> ids) {
         return userRepo.findAllByIdIn(ids);
     }
 

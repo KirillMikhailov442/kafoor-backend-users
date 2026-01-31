@@ -15,20 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/ping")
 public class PingController {
 
-    @Operation(
-            summary = "Health check",
-            description = "Returns 'pong' to confirm that the service is up and responding. Used for smoke tests, liveness probes, or basic connectivity checks."
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Service is operational",
-            content = @Content(
-                    mediaType = "text/plain",
-                    schema = @Schema(type = "string", example = "pong")
-            )
-    )
-    @GetMapping
-    public ResponseEntity<String> pong() {
-        return ResponseEntity.ok("pong");
-    }
+        @Operation(summary = "Health check", description = "Returns 'pong' to confirm that the service is up and responding. Used for smoke tests, liveness probes, or basic connectivity checks.")
+        @ApiResponse(responseCode = "200", description = "Service is operational", content = @Content(mediaType = "text/plain", schema = @Schema(type = "string", example = "pong")))
+        @GetMapping
+        public ResponseEntity<String> pong() {
+                return ResponseEntity.ok("pong");
+        }
 }

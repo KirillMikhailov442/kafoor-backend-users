@@ -29,7 +29,7 @@ public class JWTService {
 
     private static final Logger LOGGER = LogManager.getLogger(JWTService.class);
 
-    private String generateToken(UserPrincipal user, Map<String, Object> extraClaims, String key, int lifeTime){
+    private String generateToken(UserPrincipal user, Map<String, Object> extraClaims, String key, int lifeTime) {
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
@@ -39,7 +39,7 @@ public class JWTService {
                 .compact();
     }
 
-    private String generateToken(UserPrincipal user, String key, int lifeTime){
+    private String generateToken(UserPrincipal user, String key, int lifeTime) {
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -48,25 +48,28 @@ public class JWTService {
                 .compact();
     }
 
-    public String generateToken(UserPrincipal user, Map<String, Object> extraClaims, Token tokenType){
-        if(tokenType.equals(Token.ACCESS)){
+    public String generateToken(UserPrincipal user, Map<String, Object> extraClaims, Token tokenType) {
+        if (tokenType.equals(Token.ACCESS)) {
             return generateToken(user, extraClaims, accessKey, accessLifeTime);
-        }
-        else{
+        } else {
             return generateToken(user, extraClaims, refreshKey, refreshLifeTime);
         }
     }
 
-    public String generateToken(UserPrincipal user, Token tokenType){
-        if(tokenType.equals(Token.ACCESS)) return generateToken(user, accessKey, accessLifeTime);
-        else return generateToken(user, refreshKey, refreshLifeTime);
+    public String generateToken(UserPrincipal user, Token tokenType) {
+        if (tokenType.equals(Token.ACCESS))
+            return generateToken(user, accessKey, accessLifeTime);
+        else
+            return generateToken(user, refreshKey, refreshLifeTime);
     }
 
-    public Claims getClaimsFromToken(String token, Token tokenType){
-        try{
+    public Claims getClaimsFromToken(String token, Token tokenType) {
+        try {
             String key;
-            if(tokenType.equals(Token.ACCESS)) key = accessKey;
-            else key = refreshKey;
+            if (tokenType.equals(Token.ACCESS))
+                key = accessKey;
+            else
+                key = refreshKey;
 
             return Jwts.parserBuilder()
                     .setSigningKey(getKey(key))
@@ -74,33 +77,33 @@ public class JWTService {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException expEx) {
-            LOGGER.error("Expired JwtException",expEx);
-        }catch (UnsupportedJwtException expEx) {
-            LOGGER.error("Unsupported JwtException",expEx);
+            LOGGER.error("Expired JwtException", expEx);
+        } catch (UnsupportedJwtException expEx) {
+            LOGGER.error("Unsupported JwtException", expEx);
         } catch (MalformedJwtException expEx) {
-            LOGGER.error("Malformed JwtException",expEx);
+            LOGGER.error("Malformed JwtException", expEx);
         } catch (SecurityException expEx) {
-            LOGGER.error("Security exception",expEx);
+            LOGGER.error("Security exception", expEx);
         } catch (Exception expEx) {
-            LOGGER.error("Invalid token",expEx);
+            LOGGER.error("Invalid token", expEx);
         }
         return null;
     }
 
-    public Date getExpirationDateFromToken(String token, Token tokenType){
+    public Date getExpirationDateFromToken(String token, Token tokenType) {
         return getClaimsFromToken(token, tokenType).getExpiration();
     }
 
-    public boolean isTokenExpired(String token, Token tokenType){
+    public boolean isTokenExpired(String token, Token tokenType) {
         return getExpirationDateFromToken(token, tokenType).before(new Date());
     }
 
-    public String getUsernameFromToken(String token, Token tokenType){
+    public String getUsernameFromToken(String token, Token tokenType) {
         return getClaimsFromToken(token, tokenType).getSubject();
     }
 
-    public boolean validateToken(String token, Token tokenType, UserPrincipal user){
-        try{
+    public boolean validateToken(String token, Token tokenType, UserPrincipal user) {
+        try {
             final String username = getUsernameFromToken(token, tokenType);
             return (username.equals(user.getUsername()) && isTokenExpired(token, tokenType));
         } catch (Exception e) {
@@ -108,7 +111,7 @@ public class JWTService {
         }
     }
 
-    private Key getKey(String key){
+    private Key getKey(String key) {
         byte[] KeyBytes = Decoders.BASE64.decode(key);
         return Keys.hmacShaKeyFor(KeyBytes);
     }

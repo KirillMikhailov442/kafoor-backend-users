@@ -16,17 +16,16 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void handle( HttpServletRequest request,
-                       HttpServletResponse response,
-                       AccessDeniedException accessDeniedException) throws IOException {
+    public void handle(HttpServletRequest request,
+            HttpServletResponse response,
+            AccessDeniedException accessDeniedException) throws IOException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json;charset=UTF-8");
 
         Map<String, Object> responseBody = Map.of(
                 "message", "you do not have sufficient permissions to perform this action",
                 "path", request.getRequestURI(),
-                "timestamp", System.currentTimeMillis()
-        );
+                "timestamp", System.currentTimeMillis());
 
         response.getWriter().write(objectMapper.writeValueAsString(responseBody));
     }

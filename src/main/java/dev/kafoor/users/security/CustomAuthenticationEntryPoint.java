@@ -18,16 +18,15 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
-                         AuthenticationException authException) throws IOException {
+            HttpServletResponse response,
+            AuthenticationException authException) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json;charset=UTF-8");
 
         Map<String, Object> responseBody = Map.of(
                 "message", "access token is missing, invalid, or expired",
                 "path", request.getRequestURI(),
-                "timestamp", System.currentTimeMillis()
-        );
+                "timestamp", System.currentTimeMillis());
 
         response.getWriter().write(objectMapper.writeValueAsString(responseBody));
     }
